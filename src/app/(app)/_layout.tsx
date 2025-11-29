@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { Link, Redirect, Tabs } from 'expo-router';
+import { Link, Tabs } from 'expo-router';
 import React from 'react';
+import { Folder } from 'phosphor-react-native';
 
 import { Pressable, Text } from '@/components/ui';
 import {
@@ -9,28 +10,41 @@ import {
   Style as StyleIcon,
   Home as ProfileIcon,
 } from '@/components/ui/icons';
-import { useAuth } from '@/app/providers/auth/auth-provider';
 
 export default function TabLayout() {
-  const { status, isFirstTime } = useAuth();
-
-  if (isFirstTime) {
-    return <Redirect href="/(auth)/onboarding" />;
-  }
-
-  if (status === 'signOut') {
-    return <Redirect href="/(auth)/login" />;
-  }
-  
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: '#0ea5e9',
+        tabBarStyle: {
+          backgroundColor: '#1b1e26', 
+          borderTopColor: '#1e40af',
+        },
+        tabBarInactiveTintColor: '#4d5770', 
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Feed',
+          href: null, // Hide from tab bar
+        }}
+      />
+      <Tabs.Screen
+        name="news"
+        options={{
+          title: 'News',
+          headerShown: false,
           tabBarIcon: ({ color }) => <FeedIcon color={color} />,
-          headerRight: () => <CreateNewPostLink />,
-          tabBarButtonTestID: 'feed-tab',
+          tabBarButtonTestID: 'news-tab',
+        }}
+      />
+      <Tabs.Screen
+        name="collections"
+        options={{
+          title: 'Collections',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <Folder size={24} color={color} weight="fill" />,
+          tabBarButtonTestID: 'collections-tab',
         }}
       />
       <Tabs.Screen
@@ -63,13 +77,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-const CreateNewPostLink = () => {
-  return (
-    <Link href={"/feed/add-post" as any} asChild>
-      <Pressable>
-        <Text className="px-3 text-primary-300">Create</Text>
-      </Pressable>
-    </Link>
-  );
-};

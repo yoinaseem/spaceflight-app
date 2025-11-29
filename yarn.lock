@@ -5898,6 +5898,11 @@ path-scurry@^1.11.1, path-scurry@^1.6.1:
     lru-cache "^10.2.0"
     minipass "^5.0.0 || ^6.0.2 || ^7.0.0"
 
+phosphor-react-native@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/phosphor-react-native/-/phosphor-react-native-3.0.2.tgz#119b0e7906afec2907d0adacf1040acb74a1dbab"
+  integrity sha512-Cxr2oaXztSwBqXew54gvTldmgA1hhPunPSQuqA37WLFRkQNJ5ltvi9/EeJWV6a0WbEk6ae3RVLlUErtyrlbEdA==
+
 picocolors@^1.0.0, picocolors@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.1.1.tgz#3d321af3eab939b083c8f929a1d12cda81c26b6b"

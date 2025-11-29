@@ -1,12 +1,9 @@
 import React from 'react';
 // import { Env } from '@env';
-import { useColorScheme } from 'nativewind';
-import { observer } from 'mobx-react-lite';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Item } from '@/components/settings/item';
 import { ItemsContainer } from '@/components/settings/items-container';
-import { LanguageItem } from '@/components/settings/language-item';
-import { ThemeItem } from '@/components/settings/theme-item';
 import {
   colors,
   FocusAwareStatusBar,
@@ -15,57 +12,46 @@ import {
   View,
 } from '@/components/ui';
 import { Github, Rate, Share, Support, Website } from '@/components/ui/icons';
-import { translate } from '@/lib';
-import { useAuth } from '@/app/providers/auth/auth-provider';
 
-export default observer(function Settings() {
-  const { signOut } = useAuth();
-  const { colorScheme } = useColorScheme();
-  const iconColor =
-    colorScheme === 'dark' ? colors.neutral[400] : colors.neutral[500];
-    
+export default function Settings() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <>
+    <View className="flex-1 bg-neutral-950">
       <FocusAwareStatusBar />
       <ScrollView>
-        <View className="flex-1 px-4 pt-16 ">
-          <Text className="text-xl font-bold">
-            {translate('settings.title')}
-          </Text>
-          <ItemsContainer title="settings.generale">
-            <LanguageItem />
-            <ThemeItem />
-          </ItemsContainer>
+        <View className="flex-1 px-4" style={{ paddingTop: insets.top + 16 }}>
+          <Text className="text-xl font-bold text-white">Settings</Text>
 
-          <ItemsContainer title="settings.support_us">
+          <ItemsContainer title="Support">
             <Item
-              text="settings.share"
-              icon={<Share color={iconColor} />}
+              text="Share App"
+              icon={<Share color={colors.neutral[500]} />}
               onPress={() => {}}
             />
             <Item
-              text="settings.rate"
-              icon={<Rate color={iconColor} />}
+              text="Rate App"
+              icon={<Rate color={colors.neutral[500]} />}
               onPress={() => {}}
             />
             <Item
-              text="settings.support"
-              icon={<Support color={iconColor} />}
+              text="Get Support"
+              icon={<Support color={colors.neutral[500]} />}
               onPress={() => {}}
             />
           </ItemsContainer>
 
-          <ItemsContainer title="settings.links">
-            <Item text="settings.privacy" onPress={() => {}} />
-            <Item text="settings.terms" onPress={() => {}} />
+          <ItemsContainer title="Links">
+            <Item text="Privacy Policy" onPress={() => {}} />
+            <Item text="Terms of Service" onPress={() => {}} />
             <Item
-              text="settings.github"
-              icon={<Github color={iconColor} />}
+              text="GitHub"
+              icon={<Github color={colors.neutral[500]} />}
               onPress={() => {}}
             />
             <Item
-              text="settings.website"
-              icon={<Website color={iconColor} />}
+              text="Website"
+              icon={<Website color={colors.neutral[500]} />}
               onPress={() => {}}
             />
           </ItemsContainer>
@@ -74,14 +60,8 @@ export default observer(function Settings() {
             <Item text="settings.app_name" value={Env.NAME} />
             <Item text="settings.version" value={Env.VERSION} />
           </ItemsContainer> */}
-
-          <View className="my-8">
-            <ItemsContainer>
-              <Item text="settings.logout" onPress={() => signOut()} />
-            </ItemsContainer>
-          </View>
         </View>
       </ScrollView>
-    </>
+    </View>
   );
-});
+}
