@@ -3,6 +3,8 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { RefreshControl } from 'react-native';
+import { ArrowClockwise } from 'phosphor-react-native';
 
 import type { Article } from '@/api/articles';
 import { useArticles } from '@/api/articles';
@@ -16,6 +18,7 @@ const News = observer(() => {
   const [offset, setOffset] = React.useState(0);
   const [allArticles, setAllArticles] = React.useState<Article[]>([]);
   const [selectedArticle, setSelectedArticle] = React.useState<Article | null>(null);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const limit = 20;
 
@@ -23,6 +26,18 @@ const News = observer(() => {
     variables: { limit, offset }
   });
   const insets = useSafeAreaInsets();
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    setOffset(0);
+
+    const [_] = await Promise.all([
+      refetch(),
+      new Promise(resolve => setTimeout(resolve, 1000))
+    ]);
+
+    setIsRefreshing(false);
+  };
 
   const handleBookmarkPress = (article: Article) => {
     setSelectedArticle(article);
@@ -96,6 +111,15 @@ const News = observer(() => {
         ListFooterComponent={renderFooter}
         estimatedItemSize={300}
         extraData={collectionStore.collections}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor="#3b82f6"
+            colors={['#3b82f6']}
+            progressViewOffset={insets.top}
+          />
+        }
       />
       <CollectionSelectorModal article={selectedArticle} bottomSheetRef={bottomSheetRef} />
     </View>

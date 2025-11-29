@@ -4,6 +4,7 @@ import { Bookmark } from 'phosphor-react-native';
 
 import type { Article } from '@/api/articles';
 import { Image, Pressable, Text, View } from '@/components/ui';
+import { FollowButton } from './follow-button';
 
 type Props = {
   article: Article;
@@ -50,9 +51,12 @@ export const ArticleCard = ({ article, isInAnyCollection = false, onBookmarkPres
 
           <View className="p-4">
             <View className="mb-2 flex-row items-center justify-between">
-              <Text className="text-sm font-medium text-blue-400">
-                {article.news_site}
-              </Text>
+              <View className="flex-row items-center gap-2">
+                <Text className="text-sm font-medium text-blue-400">
+                  {article.news_site}
+                </Text>
+                <FollowButton siteName={article.news_site} />
+              </View>
               <Text className="text-xs text-gray-400">
                 {formattedDate}
               </Text>

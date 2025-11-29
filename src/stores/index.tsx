@@ -3,11 +3,13 @@ import React from 'react';
 import './_hydration';
 
 import { CollectionStore } from './collection-store';
+import { SubscriptionsStore } from './subscriptions-store';
 import { IStore, PVoid } from './types';
 
 // Centralized stores object
 class Stores {
   collection = new CollectionStore();
+  subscriptions = new SubscriptionsStore();
 };
 
 export const stores = new Stores();
