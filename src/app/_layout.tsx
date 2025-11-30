@@ -46,8 +46,25 @@ export default function RootLayout() {
 
   return (
     <Providers>
-      <Stack>
+      <Stack
+        screenOptions={{
+          contentStyle: {
+            backgroundColor: '#0a0a0a',
+          },
+          animation: 'slide_from_right',
+          animationDuration: 100,
+          detachPreviousScreen: false,
+          detachInactiveScreens: false,
+          freezeOnBlur: false,
+        }}
+      >
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="[id]"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     </Providers>
   );

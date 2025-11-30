@@ -76,9 +76,14 @@ export default observer(function Collections() {
     <View className="flex-1 bg-neutral-950" style={{ paddingTop: insets.top }}>
       <FocusAwareStatusBar />
 
-      <View className="flex-1 p-4">
-        <View className="mb-4 flex-row items-center justify-between">
-          <Text className="text-2xl font-bold text-white">Collections</Text>
+      <View className="border-b border-neutral-700 px-6 py-4">
+        <View className="flex-row items-center justify-between">
+          <View>
+            <Text className="text-2xl font-bold text-white">Collections</Text>
+            <Text className="mt-1 text-sm text-gray-400">
+              {collectionStore.collections.length} {collectionStore.collections.length === 1 ? 'collection' : 'collections'}
+            </Text>
+          </View>
           <Pressable
             onPress={handleCreateCollection}
             className="rounded-full bg-blue-600 p-2"
@@ -86,46 +91,46 @@ export default observer(function Collections() {
             <Plus size={24} color="#ffffff" weight="bold" />
           </Pressable>
         </View>
+      </View>
 
-        <FlatList
-          data={collectionStore.collections}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View className="mb-3 rounded-xl border border-neutral-700 bg-neutral-800 p-4">
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row items-center">
-                  <View className="mr-3 rounded-lg bg-blue-600/20 p-3">
-                    <Folder size={24} color="#3b82f6" weight="fill" />
-                  </View>
-                  <View>
-                    <Text className="text-lg font-semibold text-white">
-                      {item.name}
-                    </Text>
-                    <Text className="text-sm text-gray-400">
-                      {item.articles.length} {item.articles.length === 1 ? 'article' : 'articles'}
-                    </Text>
-                  </View>
-                </View>
-
-                <Pressable
-                  onPress={() => handleCollectionMenu(item)}
-                  className="rounded-full p-2"
-                >
-                  <DotsThree size={24} color="#9ca3af" weight="bold" />
-                </Pressable>
+      <FlatList
+        data={collectionStore.collections}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View className="flex-row items-center justify-between border-b border-neutral-800 px-6 py-10">
+            <View className="flex-1 flex-row items-center">
+              <View className="mr-3 rounded-lg bg-blue-600/20 p-3">
+                <Folder size={24} color="#3b82f6" weight="fill" />
+              </View>
+              <View className="flex-1">
+                <Text className="text-lg font-semibold text-white">
+                  {item.name}
+                </Text>
+                <Text className="text-sm text-gray-400">
+                  {item.articles.length} {item.articles.length === 1 ? 'article' : 'articles'}
+                </Text>
               </View>
             </View>
-          )}
-          ListEmptyComponent={
-            <View className="mt-20 items-center">
-              <Folder size={64} color="#6b7280" weight="thin" />
-              <Text className="mt-4 text-center text-gray-400">
-                No collections yet
-              </Text>
-            </View>
-          }
-        />
-      </View>
+
+            <Pressable
+              onPress={() => handleCollectionMenu(item)}
+              className="ml-3 rounded-full p-1"
+            >
+              <DotsThree size={20} color="#9ca3af" weight="bold" />
+            </Pressable>
+          </View>
+        )}
+        ListEmptyComponent={
+          <View className="flex-1 items-center justify-center p-8">
+            <Text className="text-center text-lg text-gray-400">
+              No collections yet.
+            </Text>
+            <Text className="mt-2 text-center text-sm text-gray-500">
+              Create a collection to organize your articles!
+            </Text>
+          </View>
+        }
+      />
 
       <CollectionNameModal
         visible={showCreateModal}

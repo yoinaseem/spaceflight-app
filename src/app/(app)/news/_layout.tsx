@@ -9,13 +9,6 @@ export default function NewsLayout() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="[id]"
-        options={{
-          title: 'Article',
-          headerShown: true,
-        }}
-      />
     </Stack>
   );
 }

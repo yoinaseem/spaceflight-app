@@ -1,10 +1,10 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { Bookmark } from 'phosphor-react-native';
 
 import type { Article } from '@/api/articles';
 import { Image, Pressable, Text, View } from '@/components/ui';
 import { FollowButton } from './follow-button';
+import { BookmarkButton } from './bookmark-button';
 
 type Props = {
   article: Article;
@@ -26,7 +26,7 @@ export const ArticleCard = ({ article, isInAnyCollection = false, onBookmarkPres
   };
 
   return (
-    <Link href={`/news/${article.id}` as any} asChild>
+    <Link href={{ pathname: '/[id]', params: { id: article.id.toString() } }} asChild>
       <Pressable>
         <View className="m-2 overflow-hidden rounded-xl border border-neutral-700 bg-neutral-900">
           <View className="relative">
@@ -37,16 +37,11 @@ export const ArticleCard = ({ article, isInAnyCollection = false, onBookmarkPres
                 uri: article.image_url || 'https://via.placeholder.com/800x600?text=No+Image',
               }}
             />
-            <Pressable
+            <BookmarkButton
+              isBookmarked={isInAnyCollection}
               onPress={handleBookmarkPress}
-              className="absolute right-3 top-3 rounded-full bg-black/50 p-2"
-            >
-              <Bookmark
-                size={24}
-                color="#ffffff"
-                weight={isInAnyCollection ? "fill" : "regular"}
-              />
-            </Pressable>
+              variant="overlay"
+            />
           </View>
 
           <View className="p-4">

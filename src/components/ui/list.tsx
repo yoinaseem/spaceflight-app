@@ -16,7 +16,8 @@ export const EmptyList = React.memo(({ isLoading }: Props) => {
       {!isLoading ? (
         <View>
           <NoData />
-          <Text className="pt-4 text-center">Sorry! No data found</Text>
+          <Text className="pt-4 text-center text-white">No results found</Text>
+          <Text className="pt-2 text-center text-sm text-gray-400">Try a different search term</Text>
         </View>
       ) : (
         <ActivityIndicator />

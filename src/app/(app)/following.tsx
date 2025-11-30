@@ -1,0 +1,67 @@
+import { observer } from 'mobx-react-lite';
+import React from 'react';
+import { Alert, FlatList } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { X } from 'phosphor-react-native';
+
+import { useStores } from '@/stores';
+import { FocusAwareStatusBar, Pressable, Text, View } from '@/components/ui';
+
+export default observer(function Following() {
+  const { subscriptions } = useStores();
+  const insets = useSafeAreaInsets();
+
+  const handleUnfollow = (siteName: string) => {
+    Alert.alert(
+      'Unfollow',
+      `Would you like to unfollow ${siteName}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Unfollow',
+          style: 'destructive',
+          onPress: () => subscriptions.unfollowSite(siteName),
+        },
+      ]
+    );
+  };
+
+  const renderItem = ({ item }: { item: string }) => (
+    <View className="flex-row items-center justify-between border-b border-neutral-800 px-6 py-10">
+      <Text className="flex-1 text-lg font-semibold text-white">{item}</Text>
+      <Pressable
+        onPress={() => handleUnfollow(item)}
+        className="ml-3 rounded-full p-1"
+      >
+        <X size={14} color="#ffffff" weight="bold" />
+      </Pressable>
+    </View>
+  );
+
+  return (
+    <View className="flex-1 bg-neutral-950" style={{ paddingTop: insets.top }}>
+      <FocusAwareStatusBar />
+      <View className="border-b border-neutral-700 px-6 py-4">
+        <Text className="text-2xl font-bold text-white">Following</Text>
+        <Text className="mt-1 text-sm text-gray-400">
+          {subscriptions.followedSites.length} {subscriptions.followedSites.length === 1 ? 'site' : 'sites'}
+        </Text>
+      </View>
+      <FlatList
+        data={subscriptions.followedSites}
+        renderItem={renderItem}
+        keyExtractor={(item) => item}
+        ListEmptyComponent={
+          <View className="flex-1 items-center justify-center p-8">
+            <Text className="text-center text-lg text-gray-400">
+              No subscriptions yet.
+            </Text>
+            <Text className="mt-2 text-center text-sm text-gray-500">
+              Follow news sites from the News tab!
+            </Text>
+          </View>
+        }
+      />
+    </View>
+  );
+});

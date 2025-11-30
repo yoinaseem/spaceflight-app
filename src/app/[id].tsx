@@ -1,6 +1,8 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as React from 'react';
 import { Linking } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { X, Bookmark } from 'phosphor-react-native';
 
 import { useArticle } from '@/api/articles';
 import {
@@ -8,6 +10,7 @@ import {
   Button,
   FocusAwareStatusBar,
   Image,
+  Pressable,
   ScrollView,
   Text,
   View,
@@ -15,6 +18,8 @@ import {
 
 export default function ArticleDetail() {
   const local = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   const { data, isPending, isError } = useArticle({
     variables: { id: Number(local.id) },
@@ -26,10 +31,18 @@ export default function ArticleDetail() {
     }
   }, [data?.url]);
 
+  const handleClose = React.useCallback(() => {
+    router.back();
+  }, [router]);
+
+  const handleBookmark = React.useCallback(() => {
+    console.log('Bookmark pressed');
+    // TODO: Add bookmark functionality
+  }, []);
+
   if (isPending) {
     return (
       <View className="flex-1 justify-center bg-neutral-950 p-3">
-        <Stack.Screen options={{ title: 'Article', headerBackTitle: 'Feed' }} />
         <FocusAwareStatusBar />
         <ActivityIndicator />
       </View>
@@ -39,7 +52,6 @@ export default function ArticleDetail() {
   if (isError || !data) {
     return (
       <View className="flex-1 justify-center bg-neutral-950 p-3">
-        <Stack.Screen options={{ title: 'Article', headerBackTitle: 'Feed' }} />
         <FocusAwareStatusBar />
         <Text className="text-center text-white">Error loading article</Text>
       </View>
@@ -57,6 +69,19 @@ export default function ArticleDetail() {
   return (
     <View className="flex-1 bg-neutral-950">
       <FocusAwareStatusBar />
+      {/* Custom Header */}
+      <View
+        className="flex-row items-center justify-between border-b border-neutral-800 bg-neutral-950 px-4"
+        style={{ paddingTop: insets.top + 12, paddingBottom: 12 }}
+      >
+        <Pressable onPress={handleClose} className="p-2">
+          <X size={28} color="#ffffff" weight="bold" />
+        </Pressable>
+        <Pressable onPress={handleBookmark} className="p-2">
+          <Bookmark size={28} color="#ffffff" weight="regular" />
+        </Pressable>
+      </View>
+
       <ScrollView className="flex-1">
         <Image
           className="h-64 w-full"
