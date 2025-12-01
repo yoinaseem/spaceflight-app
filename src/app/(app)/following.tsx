@@ -26,17 +26,27 @@ export default observer(function Following() {
     );
   };
 
-  const renderItem = ({ item }: { item: string }) => (
-    <View className="flex-row items-center justify-between border-b border-neutral-800 px-6 py-10">
-      <Text className="flex-1 text-lg font-semibold text-white">{item}</Text>
-      <Pressable
-        onPress={() => handleUnfollow(item)}
-        className="ml-3 rounded-full p-1"
-      >
-        <X size={14} color="#ffffff" weight="bold" />
-      </Pressable>
-    </View>
-  );
+  const renderItem = ({ item }: { item: string }) => {
+    return (
+      <View className="mx-4 mb-4">
+        <View className="overflow-hidden rounded-2xl bg-neutral-900/30">
+          <View className="flex-row items-center justify-between px-4 py-6">
+            <View className="flex-1">
+              <Text className="text-base font-bold uppercase tracking-wider text-white">
+                {item}
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => handleUnfollow(item)}
+              className="ml-3 rounded-full bg-neutral-800/50 p-2"
+            >
+              <X size={16} color="#ffffff" weight="bold" />
+            </Pressable>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View className="flex-1 bg-neutral-950" style={{ paddingTop: insets.top }}>

@@ -3,8 +3,13 @@ import * as React from 'react';
 import { Linking } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X, Bookmark } from 'phosphor-react-native';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { observer } from 'mobx-react-lite';
 
+import type { Article } from '@/api/articles';
 import { useArticle } from '@/api/articles';
+import { CollectionSelectorModal } from '@/components/collection-selector-modal';
+import { useStores } from '@/stores';
 import {
   ActivityIndicator,
   Button,
@@ -16,10 +21,12 @@ import {
   View,
 } from '@/components/ui';
 
-export default function ArticleDetail() {
+function ArticleDetail() {
   const local = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { collection: collectionStore } = useStores();
+  const bottomSheetRef = React.useRef<BottomSheet>(null);
 
   const { data, isPending, isError } = useArticle({
     variables: { id: Number(local.id) },
@@ -36,9 +43,10 @@ export default function ArticleDetail() {
   }, [router]);
 
   const handleBookmark = React.useCallback(() => {
-    console.log('Bookmark pressed');
-    // TODO: Add bookmark functionality
-  }, []);
+    if (data) {
+      bottomSheetRef.current?.expand();
+    }
+  }, [data]);
 
   if (isPending) {
     return (
@@ -66,6 +74,8 @@ export default function ArticleDetail() {
     minute: '2-digit',
   });
 
+  const isInAnyCollection = collectionStore.getCollectionsForArticle(data.id).length > 0;
+
   return (
     <View className="flex-1 bg-neutral-950">
       <FocusAwareStatusBar />
@@ -78,7 +88,7 @@ export default function ArticleDetail() {
           <X size={28} color="#ffffff" weight="bold" />
         </Pressable>
         <Pressable onPress={handleBookmark} className="p-2">
-          <Bookmark size={28} color="#ffffff" weight="regular" />
+          <Bookmark size={28} color="#ffffff" weight={isInAnyCollection ? 'fill' : 'regular'} />
         </Pressable>
       </View>
 
@@ -137,6 +147,9 @@ export default function ArticleDetail() {
           )}
         </View>
       </ScrollView>
+      <CollectionSelectorModal article={data} bottomSheetRef={bottomSheetRef} />
     </View>
   );
 }
+
+export default observer(ArticleDetail);

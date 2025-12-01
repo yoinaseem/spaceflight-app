@@ -60,7 +60,7 @@ export class CollectionStore implements IStore {
     if (!exists) {
       this.collections = this.collections.map((c, i) =>
         i === collectionIndex
-          ? { ...c, articles: [...c.articles, article] }
+          ? { ...c, articles: [article, ...c.articles] }
           : c
       );
     }

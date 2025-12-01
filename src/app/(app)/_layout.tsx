@@ -2,9 +2,8 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
-import { Folder, User, MagnifyingGlass } from 'phosphor-react-native';
+import { User, MagnifyingGlass, House } from 'phosphor-react-native';
 import {
-  Feed as FeedIcon,
   Settings as SettingsIcon,
 } from '@/components/ui/icons';
 import { TabBarProvider, useTabBar } from '@/contexts/tab-bar-context';
@@ -41,10 +40,11 @@ function TabsContent() {
       screenOptions={{
         tabBarActiveTintColor: '#0ea5e9',
         tabBarStyle: {
-          backgroundColor: '#1b1e26',
-          borderTopColor: '#1e40af',
+          backgroundColor: '#0a0a0a',
+          borderTopColor: '#262626',
+          borderTopWidth: 1,
         },
-        tabBarInactiveTintColor: '#4d5770',
+        tabBarInactiveTintColor: '#6b7280',
       }}
     >
       <Tabs.Screen
@@ -56,10 +56,12 @@ function TabsContent() {
       <Tabs.Screen
         name="news"
         options={{
-          title: 'News',
+          title: 'Home',
           headerShown: false,
-          tabBarIcon: ({ color }) => <FeedIcon color={color} />,
-          tabBarButtonTestID: 'news-tab',
+          tabBarIcon: ({ color, focused }) => (
+            <House size={24} color={color} weight={focused ? 'fill' : 'regular'} />
+          ),
+          tabBarButtonTestID: 'home-tab',
         }}
       />
       <Tabs.Screen
@@ -67,17 +69,10 @@ function TabsContent() {
         options={{
           title: 'Explore',
           headerShown: false,
-          tabBarIcon: ({ color }) => <MagnifyingGlass size={24} color={color} weight="bold" />,
+          tabBarIcon: ({ color, focused }) => (
+            <MagnifyingGlass size={24} color={color} weight={focused ? 'fill' : 'regular'} />
+          ),
           tabBarButtonTestID: 'explore-tab',
-        }}
-      />
-      <Tabs.Screen
-        name="collections"
-        options={{
-          title: 'Collections',
-          headerShown: false,
-          tabBarIcon: ({ color }) => <Folder size={24} color={color} weight="fill" />,
-          tabBarButtonTestID: 'collections-tab',
         }}
       />
       <Tabs.Screen
@@ -85,7 +80,9 @@ function TabsContent() {
         options={{
           title: 'Following',
           headerShown: false,
-          tabBarIcon: ({ color }) => <User size={24} color={color} weight="fill" />,
+          tabBarIcon: ({ color, focused }) => (
+            <User size={24} color={color} weight={focused ? 'fill' : 'regular'} />
+          ),
           tabBarButtonTestID: 'following-tab',
         }}
       />

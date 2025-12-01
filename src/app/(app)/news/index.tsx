@@ -178,28 +178,42 @@ const News = observer(() => {
           right: 0,
           zIndex: 10,
           backgroundColor: '#0a0a0a',
-          opacity: tabBarTranslateY.interpolate({
-            inputRange: [0, 100],
-            outputRange: [1, 0],
-          }),
+          transform: [
+            {
+              translateY: tabBarTranslateY.interpolate({
+                inputRange: [0, 100],
+                outputRange: [0, -(insets.top + 80)],
+              }),
+            },
+          ],
         }}
-        pointerEvents={showDropdown ? 'auto' : 'box-none'}
+        pointerEvents="auto"
       >
-        <Pressable onPress={() => setShowDropdown(!showDropdown)} className="flex-row items-center">
-          <Text className="text-2xl font-bold text-white">
-            {filterMode === 'news' ? 'News' : 'Following'}
-          </Text>
-          {showDropdown ? (
-            <CaretUp size={20} color="#ffffff" weight="bold" className="ml-2" />
-          ) : (
-            <CaretDown size={20} color="#ffffff" weight="bold" className="ml-2" />
+        <Animated.View
+          style={{
+            opacity: tabBarTranslateY.interpolate({
+              inputRange: [0, 50],
+              outputRange: [1, 0],
+              extrapolate: 'clamp',
+            }),
+          }}
+        >
+          <Pressable onPress={() => setShowDropdown(!showDropdown)} className="flex-row items-center">
+            <Text className="text-2xl font-bold text-white">
+              {filterMode === 'news' ? 'News' : 'Following'}
+            </Text>
+            {showDropdown ? (
+              <CaretUp size={20} color="#ffffff" weight="bold" className="ml-2" />
+            ) : (
+              <CaretDown size={20} color="#ffffff" weight="bold" className="ml-2" />
+            )}
+          </Pressable>
+          {filterMode === 'following' && (
+            <Text className="mt-1 text-sm text-gray-400">
+              {subscriptions.followedSites.length} {subscriptions.followedSites.length === 1 ? 'source' : 'sources'}
+            </Text>
           )}
-        </Pressable>
-        {filterMode === 'following' && (
-          <Text className="mt-1 text-sm text-gray-400">
-            {subscriptions.followedSites.length} {subscriptions.followedSites.length === 1 ? 'source' : 'sources'}
-          </Text>
-        )}
+        </Animated.View>
       </Animated.View>
 
       {showDropdown && (

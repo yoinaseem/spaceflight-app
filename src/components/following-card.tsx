@@ -4,7 +4,6 @@ import { BlurView } from 'expo-blur';
 
 import type { Article } from '@/api/articles';
 import { Image, Pressable, Text, View } from '@/components/ui';
-import { FollowButton } from './follow-button';
 import { BookmarkButton } from './bookmark-button';
 import { getAccentColor } from '@/lib/get-accent-color';
 
@@ -14,7 +13,7 @@ type Props = {
   onBookmarkPress?: (article: Article) => void;
 };
 
-export const ArticleCard = ({ article, isInAnyCollection = false, onBookmarkPress }: Props) => {
+export const FollowingCard = ({ article, isInAnyCollection = false, onBookmarkPress }: Props) => {
   const formattedDate = new Date(article.published_at).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -33,7 +32,20 @@ export const ArticleCard = ({ article, isInAnyCollection = false, onBookmarkPres
     <Link href={{ pathname: '/[id]', params: { id: article.id.toString() } }} asChild>
       <Pressable>
         <View className="mx-4 mb-8">
-          <View className="overflow-hidden rounded-t-2xl bg-neutral-900/30 backdrop-blur-xl">
+          <View className="overflow-hidden rounded-2xl bg-neutral-900/30 backdrop-blur-xl">
+            {/* News site header with accent color */}
+            <View className="flex-row items-center justify-between px-4 py-3" style={{ backgroundColor: `${accentColor}20` }}>
+              <Text
+                className="text-sm font-bold uppercase tracking-wider"
+                style={{ color: accentColor }}
+              >
+                {article.news_site}
+              </Text>
+              <Text className="text-xs" style={{ color: accentColor, opacity: 0.7 }}>
+                {formattedDate}
+              </Text>
+            </View>
+
             <View className="relative">
               <Image
                 className="h-48 w-full"
@@ -50,24 +62,7 @@ export const ArticleCard = ({ article, isInAnyCollection = false, onBookmarkPres
               />
             </View>
 
-            {/* Glassmorphism metadata bar */}
-            <BlurView intensity={80} tint="dark" className="border-t border-white/5 py-3">
-              <View className="flex-row items-center gap-2 px-4">
-                <Text
-                  className="text-xs font-bold uppercase tracking-wider"
-                  style={{ color: accentColor }}
-                >
-                  {article.news_site}
-                </Text>
-                <FollowButton siteName={article.news_site} />
-                <Text className="text-xs text-gray-400">•</Text>
-                <Text className="text-xs text-gray-400">
-                  {formattedDate}
-                </Text>
-              </View>
-            </BlurView>
-
-            {/* Title section - clean separation */}
+            {/* Title section */}
             <View className="rounded-b-2xl bg-neutral-900/80 px-4 py-4">
               <Text className="text-lg font-bold leading-snug text-white" numberOfLines={3}>
                 {article.title}

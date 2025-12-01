@@ -1,8 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { Alert, FlatList } from 'react-native';
+import { Alert, FlatList, Image } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { DotsThree, Folder, Plus } from 'phosphor-react-native';
+import { DotsThree, Folder, Plus, CaretLeft } from 'phosphor-react-native';
 
 import { useStores } from '@/stores';
 import type { Collection } from '@/stores/collection-store';
@@ -11,6 +12,7 @@ import { Button, FocusAwareStatusBar, Pressable, Text, View } from '@/components
 
 export default observer(function Collections() {
   const { collection: collectionStore } = useStores();
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [showCreateModal, setShowCreateModal] = React.useState(false);
   const [editingCollection, setEditingCollection] = React.useState<Collection | null>(null);
@@ -78,11 +80,16 @@ export default observer(function Collections() {
 
       <View className="border-b border-neutral-700 px-6 py-4">
         <View className="flex-row items-center justify-between">
-          <View>
-            <Text className="text-2xl font-bold text-white">Collections</Text>
-            <Text className="mt-1 text-sm text-gray-400">
-              {collectionStore.collections.length} {collectionStore.collections.length === 1 ? 'collection' : 'collections'}
-            </Text>
+          <View className="flex-1 flex-row items-center">
+            <Pressable onPress={() => router.back()} className="mr-3">
+              <CaretLeft size={28} color="#ffffff" weight="bold" />
+            </Pressable>
+            <View>
+              <Text className="text-2xl font-bold text-white">Collections</Text>
+              <Text className="mt-1 text-sm text-gray-400">
+                {collectionStore.collections.length} {collectionStore.collections.length === 1 ? 'collection' : 'collections'}
+              </Text>
+            </View>
           </View>
           <Pressable
             onPress={handleCreateCollection}
@@ -96,30 +103,45 @@ export default observer(function Collections() {
       <FlatList
         data={collectionStore.collections}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View className="flex-row items-center justify-between border-b border-neutral-800 px-6 py-10">
-            <View className="flex-1 flex-row items-center">
-              <View className="mr-3 rounded-lg bg-blue-600/20 p-3">
-                <Folder size={24} color="#3b82f6" weight="fill" />
-              </View>
-              <View className="flex-1">
-                <Text className="text-lg font-semibold text-white">
-                  {item.name}
-                </Text>
-                <Text className="text-sm text-gray-400">
-                  {item.articles.length} {item.articles.length === 1 ? 'article' : 'articles'}
-                </Text>
-              </View>
-            </View>
-
+        renderItem={({ item }) => {
+          const mostRecentArticle = item.articles[0];
+          return (
             <Pressable
-              onPress={() => handleCollectionMenu(item)}
-              className="ml-3 rounded-full p-1"
+              onPress={() => router.push(`/(app)/settings/${item.id}`)}
+              className="flex-row items-center justify-between border-b border-neutral-800 px-6 py-10"
             >
-              <DotsThree size={20} color="#9ca3af" weight="bold" />
+              <View className="flex-1 flex-row items-center">
+                {mostRecentArticle ? (
+                  <Image
+                    source={{ uri: mostRecentArticle.image_url }}
+                    className="h-16 w-16 rounded-lg bg-neutral-800"
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View className="h-16 w-16 rounded-lg border border-neutral-700 bg-black" />
+                )}
+                <View className="ml-4 flex-1">
+                  <Text className="text-lg font-semibold text-white">
+                    {item.name}
+                  </Text>
+                  <Text className="mt-1 text-sm text-gray-400">
+                    {item.articles.length} {item.articles.length === 1 ? 'article' : 'articles'}
+                  </Text>
+                </View>
+              </View>
+
+              <Pressable
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handleCollectionMenu(item);
+                }}
+                className="ml-3 rounded-full p-1"
+              >
+                <DotsThree size={20} color="#9ca3af" weight="bold" />
+              </Pressable>
             </Pressable>
-          </View>
-        )}
+          );
+        }}
         ListEmptyComponent={
           <View className="flex-1 items-center justify-center p-8">
             <Text className="text-center text-lg text-gray-400">

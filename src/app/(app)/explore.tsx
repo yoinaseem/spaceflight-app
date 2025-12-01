@@ -147,6 +147,9 @@ const Explore = observer(() => {
         estimatedItemSize={300}
         extraData={collectionStore.collections}
         ListFooterComponent={renderFooter}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + 90,
+        }}
         refreshControl={
           debouncedQuery.length > 0 ? (
             <RefreshControl
