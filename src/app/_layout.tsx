@@ -2,6 +2,7 @@ import '../../global.css';
 
 import { Stack, SplashScreen } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { PortalHost } from '@rn-primitives/portal';
 import { hydrateStores } from '@/stores';
 import { Providers } from './providers';
 
@@ -53,8 +54,8 @@ export default function RootLayout() {
           },
           animation: 'slide_from_right',
           animationDuration: 100,
-          detachPreviousScreen: false,
-          detachInactiveScreens: false,
+          // detachPreviousScreen: false,
+          // detachInactiveScreens: false,
           freezeOnBlur: false,
         }}
       >
@@ -66,6 +67,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
+      <PortalHost />
     </Providers>
   );
 }

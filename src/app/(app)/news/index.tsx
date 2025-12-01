@@ -3,16 +3,23 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { RefreshControl, TouchableWithoutFeedback, Animated as RNAnimated } from 'react-native';
-import { CaretDown, CaretUp, Check } from 'phosphor-react-native';
+import { RefreshControl, Animated as RNAnimated } from 'react-native';
+import { CaretDown } from 'phosphor-react-native';
 
 import type { Article } from '@/api/articles';
 import { useArticles } from '@/api/articles';
 import { ArticleCard } from '@/components/article-card';
 import { CollectionSelectorModal } from '@/components/collection-selector-modal';
 import { useStores } from '@/stores';
-import { Button, EmptyList, FocusAwareStatusBar, Pressable, Text, View } from '@/components/ui';
+import { Button, EmptyList, FocusAwareStatusBar, Text, View } from '@/components/ui';
 import { useTabBar } from '@/contexts/tab-bar-context';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Animated = RNAnimated;
 
@@ -25,7 +32,6 @@ const News = observer(() => {
   const [selectedArticle, setSelectedArticle] = React.useState<Article | null>(null);
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [filterMode, setFilterMode] = React.useState<FilterMode>('news');
-  const [showDropdown, setShowDropdown] = React.useState(false);
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const limit = 20;
 
@@ -92,7 +98,6 @@ const News = observer(() => {
   const handleFilterSelect = (mode: FilterMode) => {
     setFilterMode(mode);
     setOffset(0);
-    setShowDropdown(false);
   };
 
   const handleBookmarkPress = (article: Article) => {
@@ -198,16 +203,24 @@ const News = observer(() => {
             }),
           }}
         >
-          <Pressable onPress={() => setShowDropdown(!showDropdown)} className="flex-row items-center">
-            <Text className="text-2xl font-bold text-white">
-              {filterMode === 'news' ? 'News' : 'Following'}
-            </Text>
-            {showDropdown ? (
-              <CaretUp size={20} color="#ffffff" weight="bold" className="ml-2" />
-            ) : (
-              <CaretDown size={20} color="#ffffff" weight="bold" className="ml-2" />
-            )}
-          </Pressable>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex-row items-center">
+              <Text className="text-2xl font-bold text-white">
+                {filterMode === 'news' ? 'News' : 'Following'}
+              </Text>
+              <CaretDown size={20} color="#ffffff" weight="bold" className="ml-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-24 mt-4">
+              <DropdownMenuRadioGroup value={filterMode} onValueChange={(value) => handleFilterSelect(value as FilterMode)}>
+                <DropdownMenuRadioItem value="news">
+                  <Text>News</Text>
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="following">
+                  <Text>Following</Text>
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {filterMode === 'following' && (
             <Text className="mt-1 text-sm text-gray-400">
               {subscriptions.followedSites.length} {subscriptions.followedSites.length === 1 ? 'source' : 'sources'}
@@ -215,33 +228,6 @@ const News = observer(() => {
           )}
         </Animated.View>
       </Animated.View>
-
-      {showDropdown && (
-        <>
-          <TouchableWithoutFeedback onPress={() => setShowDropdown(false)}>
-            <View className="absolute inset-0 z-40" style={{ top: insets.top }} />
-          </TouchableWithoutFeedback>
-          <View
-            className="absolute left-0 right-0 z-50 border-b border-neutral-700 bg-neutral-900 px-6"
-            style={{ top: insets.top + 72 }}
-          >
-            <Pressable
-              onPress={() => handleFilterSelect('news')}
-              className="flex-row items-center justify-between border-b border-neutral-800 py-3"
-            >
-              <Text className="text-base text-white">News</Text>
-              {filterMode === 'news' && <Check size={20} color="#3b82f6" weight="bold" />}
-            </Pressable>
-            <Pressable
-              onPress={() => handleFilterSelect('following')}
-              className="flex-row items-center justify-between py-3"
-            >
-              <Text className="text-base text-white">Following</Text>
-              {filterMode === 'following' && <Check size={20} color="#3b82f6" weight="bold" />}
-            </Pressable>
-          </View>
-        </>
-      )}
 
       <FlashList
         data={displayedArticles}
