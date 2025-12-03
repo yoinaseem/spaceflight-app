@@ -34,13 +34,25 @@ const News = observer(() => {
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [filterMode, setFilterMode] = React.useState<FilterMode>('news');
   const bottomSheetRef = React.useRef<BottomSheet>(null);
+  const flashListRef = React.useRef<FlashList<Article>>(null);
   const limit = 20;
 
   const { data, isPending, isError, error, refetch } = useArticles({
     variables: { limit, offset }
   });
   const insets = useSafeAreaInsets();
-  const { lastScrollY, tabBarTranslateY } = useTabBar();
+  const { lastScrollY, tabBarTranslateY, registerScrollHandler, unregisterScrollHandler } = useTabBar();
+
+  // Register scroll to top handler
+  React.useEffect(() => {
+    registerScrollHandler('news', () => {
+      flashListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    });
+
+    return () => {
+      unregisterScrollHandler('news');
+    };
+  }, [registerScrollHandler, unregisterScrollHandler]);
 
   const HIDE_THRESHOLD = 100; // Total scroll distance to fully hide
   const SCROLL_START_THRESHOLD = 20; // Don't start hiding until this point
@@ -160,6 +172,9 @@ const News = observer(() => {
     }
 
     if (data && data.length === limit) {
+      if (filterMode === 'following' && displayedArticles.length === 0) {
+        return null;
+      }
       return (
         <View className="p-4">
           <Button onPress={handleLoadMore}>
@@ -233,10 +248,17 @@ const News = observer(() => {
       </Animated.View>
 
       <FlashList
+        ref={flashListRef}
         data={displayedArticles}
         renderItem={renderItem}
         keyExtractor={(_, index) => `item-${index}`}
-        ListEmptyComponent={<EmptyList isLoading={isPending} />}
+        ListEmptyComponent={
+          <EmptyList
+            isLoading={isPending}
+            title={filterMode === 'following' ? 'No articles from followed sources' : 'No results found'}
+            description={filterMode === 'following' ? 'Follow news sources to see their articles here' : 'Try refreshing the page'}
+          />
+        }
         ListFooterComponent={renderFooter}
         estimatedItemSize={300}
         extraData={collectionStore.collections}

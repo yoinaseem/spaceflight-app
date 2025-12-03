@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { Tabs } from 'expo-router';
+import { Tabs, usePathname } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 import { User, MagnifyingGlass, House } from 'phosphor-react-native';
@@ -9,7 +9,8 @@ import {
 import { TabBarProvider, useTabBar } from '@/contexts/tab-bar-context';
 
 function TabsContent() {
-  const { tabBarTranslateY } = useTabBar();
+  const { tabBarTranslateY, scrollToTop } = useTabBar();
+  const pathname = usePathname();
 
   // Create a custom tab bar component that supports animation
   const tabBarComponent = React.useCallback(
@@ -62,6 +63,14 @@ function TabsContent() {
           ),
           tabBarButtonTestID: 'home-tab',
         }}
+        listeners={{
+          tabPress: (e) => {
+            if (pathname.startsWith('/news')) {
+              e.preventDefault();
+              scrollToTop('news');
+            }
+          },
+        }}
       />
       <Tabs.Screen
         name="explore"
@@ -72,6 +81,14 @@ function TabsContent() {
             <MagnifyingGlass size={24} color={color} weight={focused ? 'fill' : 'regular'} />
           ),
           tabBarButtonTestID: 'explore-tab',
+        }}
+        listeners={{
+          tabPress: (e) => {
+            if (pathname === '/explore') {
+              e.preventDefault();
+              scrollToTop('explore');
+            }
+          },
         }}
       />
       <Tabs.Screen

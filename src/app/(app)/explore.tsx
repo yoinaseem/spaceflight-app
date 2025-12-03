@@ -12,6 +12,7 @@ import { ArticleCard } from '@/components/article-card';
 import { CollectionSelectorModal } from '@/components/collection-selector-modal';
 import { useStores } from '@/stores';
 import { Button, EmptyList, FocusAwareStatusBar, Input, Pressable, Text, View } from '@/components/ui';
+import { useTabBar } from '@/contexts/tab-bar-context';
 
 const Explore = observer(() => {
   const { collection: collectionStore } = useStores();
@@ -22,8 +23,21 @@ const Explore = observer(() => {
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [selectedArticle, setSelectedArticle] = React.useState<Article | null>(null);
   const bottomSheetRef = React.useRef<BottomSheet>(null);
+  const flashListRef = React.useRef<FlashList<Article>>(null);
   const insets = useSafeAreaInsets();
+  const { registerScrollHandler, unregisterScrollHandler } = useTabBar();
   const limit = 20;
+
+  // Register scroll to top handler
+  React.useEffect(() => {
+    registerScrollHandler('explore', () => {
+      flashListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    });
+
+    return () => {
+      unregisterScrollHandler('explore');
+    };
+  }, [registerScrollHandler, unregisterScrollHandler]);
 
   const { data, isPending, refetch } = useSearchArticles({
     variables: { search: debouncedQuery, limit, offset },
@@ -142,6 +156,7 @@ const Explore = observer(() => {
       </View>
 
       <FlashList
+        ref={flashListRef}
         data={allArticles}
         renderItem={renderItem}
         keyExtractor={(_, index) => `item-${index}`}
