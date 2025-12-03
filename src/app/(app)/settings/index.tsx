@@ -21,7 +21,7 @@ export default function Settings() {
   const router = useRouter();
 
   const handleGitHubPress = () => {
-    Linking.openURL('https://github.com');
+    Linking.openURL('https://github.com/yoinaseem/spaceflight-app');
   };
 
   const handleAPIPress = () => {
