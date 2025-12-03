@@ -1,35 +1,16 @@
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import FlashMessage from 'react-native-flash-message';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Toaster } from 'sonner-native';
 import { APIProvider } from '@/api/common/api-provider';
 import { StoresProvider } from '@/stores';
 
 const ThemedApp = ({ children }: { children: React.ReactNode }) => {
-  const insets = useSafeAreaInsets();
-
   return (
     <APIProvider>
       <BottomSheetModalProvider>
         {children}
-        <FlashMessage
-          position="top"
-          floating
-          style={{
-            paddingTop: insets.top + 10,
-            alignItems: 'center',
-          }}
-          titleStyle={{
-            fontSize: 14,
-            fontWeight: '600',
-            textAlign: 'center',
-          }}
-          textStyle={{
-            fontSize: 13,
-            textAlign: 'center',
-          }}
-        />
+        <Toaster />
       </BottomSheetModalProvider>
     </APIProvider>
   );

@@ -6529,14 +6529,6 @@ react-native-edge-to-edge@1.6.0:
   resolved "https://registry.yarnpkg.com/react-native-edge-to-edge/-/react-native-edge-to-edge-1.6.0.tgz#2ba63b941704a7f713e298185c26cde4d9e4b973"
   integrity sha512-2WCNdE3Qd6Fwg9+4BpbATUxCLcouF6YRY7K+J36KJ4l3y+tWN6XCqAC4DuoGblAAbb2sLkhEDp4FOlbOIot2Og==
 
-react-native-flash-message@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/react-native-flash-message/-/react-native-flash-message-0.4.2.tgz#ed8ffe60c532bc1274c3b49a60dd0bd2fca59c50"
-  integrity sha512-YvdXRW9AGMTI99S3DJZhLO0mbk/ehKv/UQf4/Df+3dtGi8DlkidRbyqCQZk1WMtZ7rN85PMTGr/xEI9CF9z0YA==
-  dependencies:
-    prop-types "^15.8.1"
-    react-native-iphone-screen-helper "^2.0.2"
-
 react-native-gesture-handler@~2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.24.0.tgz#b6e1f13ec9bf8dfa5f4911854b6e0d73d882a81a"
@@ -6545,11 +6537,6 @@ react-native-gesture-handler@~2.24.0:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
-
-react-native-iphone-screen-helper@^2.0.2:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-iphone-screen-helper/-/react-native-iphone-screen-helper-2.2.1.tgz#34125de16426f1011ecec595be01876be9ccf2bf"
-  integrity sha512-gMHawcFa9O8St9rJ6zugW55O/sM3UUTLqc4MDaZQewBTIDjfvHzLmk2A/+PxySl5ZTfv6fyIV5g+2ozLRW5kcw==
 
 react-native-is-edge-to-edge@1.1.7:
   version "1.1.7"
@@ -7165,6 +7152,11 @@ slugify@^1.3.4, slugify@^1.6.6:
   version "1.6.6"
   resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.6.6.tgz#2d4ac0eacb47add6af9e04d3be79319cbcc7924b"
   integrity sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==
+
+sonner-native@^0.21.2:
+  version "0.21.2"
+  resolved "https://registry.yarnpkg.com/sonner-native/-/sonner-native-0.21.2.tgz#dec1b214cf91e54f750737e784226651ba1d08f2"
+  integrity sha512-LnGPmfgzrNIwcc+FvcLJqx8aH1dEHePRzvNR8aIR4kl9spySRkXK160GmQIazjfm6mSMlPqZwRa5eycvrzg/eQ==
 
 source-map-js@^1.2.1:
   version "1.2.1"
