@@ -12,6 +12,7 @@ import { ArticleCard } from '@/components/article-card';
 import { CollectionSelectorModal } from '@/components/collection-selector-modal';
 import { useStores } from '@/stores';
 import { Button, EmptyList, FocusAwareStatusBar, Text, View } from '@/components/ui';
+import { Icon } from '@/components/ui/icon';
 import { useTabBar } from '@/contexts/tab-bar-context';
 import {
   DropdownMenu,
@@ -208,7 +209,7 @@ const News = observer(() => {
               <Text className="text-2xl font-bold text-white">
                 {filterMode === 'news' ? 'News' : 'Following'}
               </Text>
-              <CaretDown size={20} color="#ffffff" weight="bold" className="ml-3" />
+              <Icon as={CaretDown} size={20} color="#ffffff" weight="bold" className="ml-3" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-24 mt-4">
               <DropdownMenuRadioGroup value={filterMode} onValueChange={(value) => handleFilterSelect(value as FilterMode)}>

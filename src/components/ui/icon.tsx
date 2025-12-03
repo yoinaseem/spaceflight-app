@@ -4,6 +4,7 @@ import { cssInterop } from 'nativewind';
 
 type IconProps = PhosphorIconProps & {
   as: PhosphorIcon;
+  className?: string;
 };
 
 function IconImpl({ as: IconComponent, ...props }: IconProps) {
