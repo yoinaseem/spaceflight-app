@@ -108,10 +108,7 @@ const News = observer(() => {
     setIsRefreshing(true);
     setOffset(0);
 
-    const [_] = await Promise.all([
-      refetch(),
-      new Promise(resolve => setTimeout(resolve, 1000))
-    ]);
+    await refetch();
 
     setIsRefreshing(false);
   };
