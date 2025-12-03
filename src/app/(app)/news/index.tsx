@@ -37,8 +37,16 @@ const News = observer(() => {
   const flashListRef = React.useRef<FlashList<Article>>(null);
   const limit = 20;
 
+  // Dynamic news_site parameter for fetch when in filter mode
+  const newsSiteParam = React.useMemo(() => {
+    if (filterMode === 'following' && subscriptions.followedSites.length > 0) {
+      return subscriptions.followedSites.join(',');
+    }
+    return undefined;
+  }, [filterMode, subscriptions.followedSites]);
+
   const { data, isPending, isError, error, refetch } = useArticles({
-    variables: { limit, offset }
+    variables: { limit, offset, news_site: newsSiteParam }
   });
   const insets = useSafeAreaInsets();
   const { lastScrollY, tabBarTranslateY, registerScrollHandler, unregisterScrollHandler } = useTabBar();
@@ -55,7 +63,7 @@ const News = observer(() => {
   }, [registerScrollHandler, unregisterScrollHandler]);
 
   const HIDE_THRESHOLD = 100; // Total scroll distance to fully hide
-  const SCROLL_START_THRESHOLD = 20; // Don't start hiding until this point
+  const SCROLL_START_THRESHOLD = 20; // Threshold to trigger hiding behaviour
   const accumulatedScroll = React.useRef(0);
 
   const handleScroll = (event: any) => {
@@ -76,7 +84,7 @@ const News = observer(() => {
       Math.min(HIDE_THRESHOLD, accumulatedScroll.current + diff)
     );
 
-    // Directly set the value - no animation, just follow the finger
+    // Directly set the value; no animation just follow the finger
     tabBarTranslateY.setValue(accumulatedScroll.current);
 
     lastScrollY.current = currentScrollY;
@@ -111,6 +119,7 @@ const News = observer(() => {
   const handleFilterSelect = (mode: FilterMode) => {
     setFilterMode(mode);
     setOffset(0);
+    setAllArticles([]);
   };
 
   const handleBookmarkPress = (article: Article) => {
@@ -127,14 +136,6 @@ const News = observer(() => {
       }
     }
   }, [data, offset]);
-
-  // Separate effect to handle filtering whenever filter mode or subscriptions change
-  const displayedArticles = React.useMemo(() => {
-    if (filterMode === 'following') {
-      return allArticles.filter(article => subscriptions.isFollowing(article.news_site));
-    }
-    return allArticles;
-  }, [allArticles, filterMode, subscriptions.followedSites]);
 
   const handleLoadMore = () => {
     setOffset((prev) => prev + limit);
@@ -172,9 +173,6 @@ const News = observer(() => {
     }
 
     if (data && data.length === limit) {
-      if (filterMode === 'following' && displayedArticles.length === 0) {
-        return null;
-      }
       return (
         <View className="p-4">
           <Button onPress={handleLoadMore}>
@@ -249,7 +247,7 @@ const News = observer(() => {
 
       <FlashList
         ref={flashListRef}
-        data={displayedArticles}
+        data={allArticles}
         renderItem={renderItem}
         keyExtractor={(_, index) => `item-${index}`}
         ListEmptyComponent={

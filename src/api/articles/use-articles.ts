@@ -8,6 +8,7 @@ type Response = Article[];
 type Variables = {
   limit?: number;
   offset?: number;
+  news_site?: string;
 };
 
 export const useArticles = createQuery<Response, Variables, AxiosError>({
@@ -16,6 +17,7 @@ export const useArticles = createQuery<Response, Variables, AxiosError>({
     const params = new URLSearchParams();
     if (variables.limit) params.append('limit', variables.limit.toString());
     if (variables.offset) params.append('offset', variables.offset.toString());
+    if (variables.news_site) params.append('news_site', variables.news_site);
 
     const queryString = params.toString();
     const url = queryString ? `articles?${queryString}` : 'articles';
