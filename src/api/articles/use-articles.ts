@@ -13,7 +13,6 @@ type Variables = {
 
 export const useArticles = createQuery<Response, Variables, AxiosError>({
   queryKey: ['articles'],
-  primaryKey: (variables) => variables?.news_site ?? 'all',
   fetcher: (variables) => {
     const params = new URLSearchParams();
     if (variables.limit) params.append('limit', variables.limit.toString());

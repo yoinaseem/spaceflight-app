@@ -140,7 +140,9 @@ const Explore = observer(() => {
       <View className="border-b border-neutral-700 px-6 py-4">
         <Text className="text-2xl font-bold text-white">Explore</Text>
         <View className="mt-3 flex-row items-center gap-2">
-          <MagnifyingGlass size={20} color="#9ca3af" weight="bold" className="absolute left-3 z-10" />
+          <View className="absolute left-3 z-10">
+            <MagnifyingGlass size={20} color="#9ca3af" weight="bold" />
+          </View>
           <Input
             value={searchQuery}
             onChangeText={setSearchQuery}

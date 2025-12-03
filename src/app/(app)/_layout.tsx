@@ -103,18 +103,6 @@ function TabsContent() {
         }}
       />
       <Tabs.Screen
-        name="style"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
