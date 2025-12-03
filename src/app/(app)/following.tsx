@@ -1,29 +1,36 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { Alert, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X } from 'phosphor-react-native';
 
 import { useStores } from '@/stores';
 import { FocusAwareStatusBar, Pressable, Text, View } from '@/components/ui';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default observer(function Following() {
   const { subscriptions } = useStores();
   const insets = useSafeAreaInsets();
+  const [unfollowConfirm, setUnfollowConfirm] = React.useState<string | null>(null);
 
   const handleUnfollow = (siteName: string) => {
-    Alert.alert(
-      'Unfollow',
-      `Would you like to unfollow ${siteName}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Unfollow',
-          style: 'destructive',
-          onPress: () => subscriptions.unfollowSite(siteName),
-        },
-      ]
-    );
+    setUnfollowConfirm(siteName);
+  };
+
+  const confirmUnfollow = () => {
+    if (unfollowConfirm) {
+      subscriptions.unfollowSite(unfollowConfirm);
+      setUnfollowConfirm(null);
+    }
   };
 
   const renderItem = ({ item }: { item: string }) => {
@@ -72,6 +79,25 @@ export default observer(function Following() {
           </View>
         }
       />
+
+      <AlertDialog open={unfollowConfirm !== null} onOpenChange={(open) => !open && setUnfollowConfirm(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unfollow</AlertDialogTitle>
+            <AlertDialogDescription>
+              Would you like to unfollow {unfollowConfirm}?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onPress={() => setUnfollowConfirm(null)}>
+              <Text>Cancel</Text>
+            </AlertDialogCancel>
+            <AlertDialogAction onPress={confirmUnfollow}>
+              <Text>Unfollow</Text>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </View>
   );
 });

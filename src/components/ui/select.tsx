@@ -18,8 +18,6 @@ import colors from '@/components/ui/colors';
 import { CaretDown } from '@/components/ui/icons';
 
 import type { InputControllerType } from './input';
-import { useModal } from './modal';
-import { Modal } from './modal';
 import { Text } from './text';
 
 const selectTv = tv({
@@ -92,7 +90,7 @@ export const Options = React.forwardRef<BottomSheetModal, OptionsProps>(
     );
 
     return (
-      <Modal
+      <BottomSheetModal
         ref={ref}
         index={0}
         snapPoints={snapPoints}
@@ -107,7 +105,7 @@ export const Options = React.forwardRef<BottomSheetModal, OptionsProps>(
           testID={testID ? `${testID}-modal` : undefined}
           estimatedItemSize={52}
         />
-      </Modal>
+      </BottomSheetModal>
     );
   }
 );
@@ -158,14 +156,14 @@ export const Select = (props: SelectProps) => {
     onSelect,
     testID,
   } = props;
-  const modal = useModal();
+  const modalRef = React.useRef<BottomSheetModal>(null);
 
   const onSelectOption = React.useCallback(
     (option: OptionType) => {
       onSelect?.(option.value);
-      modal.dismiss();
+      modalRef.current?.dismiss();
     },
-    [modal, onSelect]
+    [onSelect]
   );
 
   const styles = React.useMemo(
@@ -199,7 +197,7 @@ export const Select = (props: SelectProps) => {
         <Pressable
           className={styles.input()}
           disabled={disabled}
-          onPress={modal.present}
+          onPress={() => modalRef.current?.present()}
           testID={testID ? `${testID}-trigger` : undefined}
         >
           <View className="flex-1">
@@ -218,7 +216,7 @@ export const Select = (props: SelectProps) => {
       </View>
       <Options
         testID={testID}
-        ref={modal.ref}
+        ref={modalRef}
         options={options}
         onSelect={onSelectOption}
       />

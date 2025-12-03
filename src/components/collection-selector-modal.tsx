@@ -1,7 +1,8 @@
 import BottomSheet, { BottomSheetBackdrop, BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import { Check, XCircle, Folder, Plus } from 'phosphor-react-native';
+import { Image } from 'react-native';
+import { Check, XCircle, Plus } from 'phosphor-react-native';
 
 import type { Article } from '@/api/articles';
 import { useStores } from '@/stores';
@@ -61,18 +62,18 @@ export const CollectionSelectorModal = observer(({ article, bottomSheetRef }: Pr
       snapPoints={snapPoints}
       enablePanDownToClose
       backdropComponent={renderBackdrop}
-      backgroundStyle={{ backgroundColor: '#1f2937' }}
-      handleIndicatorStyle={{ backgroundColor: '#6b7280' }}
+      backgroundStyle={{ backgroundColor: 'hsl(0, 0%, 12%)' }}
+      handleIndicatorStyle={{ backgroundColor: 'hsl(0, 0%, 46%)' }}
     >
       <View className="flex-1 px-4">
         <Text className="mb-4 text-xl font-bold text-white">Save to Collection</Text>
 
         <Pressable
           onPress={handleCreateNewCollection}
-          className="mb-4 flex-row items-center rounded-xl border-2 border-dashed border-neutral-600 bg-neutral-800 p-4"
+          className="mb-4 flex-row items-center rounded-xl bg-primary-blue/10 p-4"
         >
-          <View className="mr-3 rounded-lg bg-blue-600/20 p-2">
-            <Plus size={24} color="#3b82f6" weight="bold" />
+          <View className="mr-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-blue/20">
+            <Plus size={24} color="#0ea5e9" weight="bold" />
           </View>
           <Text className="text-base font-medium text-white">Create New Collection</Text>
         </Pressable>
@@ -80,21 +81,32 @@ export const CollectionSelectorModal = observer(({ article, bottomSheetRef }: Pr
         <BottomSheetFlatList
           data={collectionStore.collections}
           keyExtractor={(item) => item.id}
+          contentContainerStyle={{
+            paddingBottom: 100,
+          }}
           renderItem={({ item }) => {
             const isInCollection = article
               ? collectionStore.isArticleInCollection(item.id, article.id)
               : false;
+
+            const mostRecentArticle = item.articles[0];
 
             return (
               <Pressable
                 onPress={() => handleSelectCollection(item.id)}
                 className="mb-3 flex-row items-center justify-between rounded-xl bg-neutral-800 p-4"
               >
-                <View className="flex-row items-center">
-                  <View className="mr-3 rounded-lg bg-blue-600/20 p-2">
-                    <Folder size={24} color="#3b82f6" weight="fill" />
-                  </View>
-                  <View>
+                <View className="flex-row items-center flex-1">
+                  {mostRecentArticle ? (
+                    <Image
+                      source={{ uri: mostRecentArticle.image_url }}
+                      className="mr-3 h-12 w-12 rounded-lg bg-neutral-700"
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <View className="mr-3 h-12 w-12 rounded-lg border border-neutral-700 bg-black" />
+                  )}
+                  <View className="flex-1">
                     <Text className="text-base font-medium text-white">{item.name}</Text>
                     <Text className="text-sm text-gray-400">
                       {item.articles.length} {item.articles.length === 1 ? 'article' : 'articles'}
@@ -103,11 +115,11 @@ export const CollectionSelectorModal = observer(({ article, bottomSheetRef }: Pr
                 </View>
 
                 {isInCollection ? (
-                  <View className="rounded-full bg-blue-600 p-1">
+                  <View className="ml-2 rounded-full bg-primary-blue p-1">
                     <Check size={20} color="#ffffff" weight="bold" />
                   </View>
                 ) : (
-                  <View className="rounded-full border-2 border-gray-600 p-1">
+                  <View className="ml-2 rounded-full border-2 border-gray-600 p-1">
                     <XCircle size={20} color="transparent" weight="bold" />
                   </View>
                 )}

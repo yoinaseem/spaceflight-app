@@ -41,8 +41,7 @@ function TabsContent() {
         tabBarActiveTintColor: '#0ea5e9',
         tabBarStyle: {
           backgroundColor: '#0a0a0a',
-          borderTopColor: '#262626',
-          borderTopWidth: 1,
+          borderTopColor: '#1f1f1f',
         },
         tabBarInactiveTintColor: '#6b7280',
       }}

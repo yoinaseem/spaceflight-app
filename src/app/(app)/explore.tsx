@@ -4,14 +4,14 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MagnifyingGlass, X } from 'phosphor-react-native';
-import { RefreshControl, TextInput } from 'react-native';
+import { RefreshControl } from 'react-native';
 
 import type { Article } from '@/api/articles';
 import { useSearchArticles } from '@/api/articles';
 import { ArticleCard } from '@/components/article-card';
 import { CollectionSelectorModal } from '@/components/collection-selector-modal';
 import { useStores } from '@/stores';
-import { Button, EmptyList, FocusAwareStatusBar, Pressable, Text, View } from '@/components/ui';
+import { Button, EmptyList, FocusAwareStatusBar, Input, Pressable, Text, View } from '@/components/ui';
 
 const Explore = observer(() => {
   const { collection: collectionStore } = useStores();
@@ -109,7 +109,9 @@ const Explore = observer(() => {
     if (data && data.length === limit && debouncedQuery.length > 0) {
       return (
         <View className="p-4">
-          <Button label="Load More" onPress={handleLoadMore} />
+          <Button onPress={handleLoadMore}>
+            <Text>Load More</Text>
+          </Button>
         </View>
       );
     }
@@ -123,17 +125,16 @@ const Explore = observer(() => {
 
       <View className="border-b border-neutral-700 px-6 py-4">
         <Text className="text-2xl font-bold text-white">Explore</Text>
-        <View className="mt-3 flex-row items-center rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2">
-          <MagnifyingGlass size={20} color="#9ca3af" weight="bold" />
-          <TextInput
+        <View className="mt-3 flex-row items-center gap-2">
+          <MagnifyingGlass size={20} color="#9ca3af" weight="bold" className="absolute left-3 z-10" />
+          <Input
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="Search articles..."
-            placeholderTextColor="#6b7280"
-            className="ml-2 flex-1 text-base text-white"
+            className="flex-1 pl-10 pr-10"
           />
           {searchQuery.length > 0 && (
-            <Pressable onPress={handleClearSearch} className="ml-2 rounded-full bg-neutral-700 p-1">
+            <Pressable onPress={handleClearSearch} className="absolute right-3 rounded-full bg-neutral-700 p-1">
               <X size={16} color="#ffffff" weight="bold" />
             </Pressable>
           )}

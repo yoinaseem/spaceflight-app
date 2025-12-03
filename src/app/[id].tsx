@@ -118,11 +118,9 @@ function ArticleDetail() {
             {data.summary}
           </Text>
 
-          <Button
-            label="Read Full Article"
-            onPress={handleOpenArticle}
-            className="mb-4"
-          />
+          <Button onPress={handleOpenArticle} className="mb-4">
+            <Text>Read Full Article</Text>
+          </Button>
 
           {data.launches.length > 0 && (
             <View className="mb-4">

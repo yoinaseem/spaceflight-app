@@ -32,9 +32,18 @@ export class CollectionStore implements IStore {
   };
 
   createCollection = (name: string) => {
+    // Check if collection name already exists (case-insensitive)
+    const nameExists = this.collections.some(
+      (c) => c.name.toLowerCase() === name.trim().toLowerCase()
+    );
+
+    if (nameExists) {
+      throw new Error(`A collection named "${name}" already exists`);
+    }
+
     const newCollection: Collection = {
       id: Date.now().toString(),
-      name,
+      name: name.trim(),
       articles: [],
       createdAt: Date.now(),
     };
@@ -99,8 +108,17 @@ export class CollectionStore implements IStore {
       return;
     }
 
+    // Check if new name already exists (case-insensitive), excluding current collection
+    const nameExists = this.collections.some(
+      (c, i) => i !== collectionIndex && c.name.toLowerCase() === newName.trim().toLowerCase()
+    );
+
+    if (nameExists) {
+      throw new Error(`A collection named "${newName}" already exists`);
+    }
+
     this.collections = this.collections.map((c, i) =>
-      i === collectionIndex ? { ...c, name: newName } : c
+      i === collectionIndex ? { ...c, name: newName.trim() } : c
     );
   };
 }

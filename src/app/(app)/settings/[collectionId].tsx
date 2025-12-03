@@ -112,14 +112,14 @@ export default observer(function CollectionDetail() {
               </View>
               <View className="mt-4 flex-row gap-3">
                 {hasPreviousPage && (
-                  <View className="flex-1">
-                    <Button label="Previous" onPress={handlePreviousPage} />
-                  </View>
+                  <Button onPress={handlePreviousPage} className="flex-1">
+                    <Text>Previous</Text>
+                  </Button>
                 )}
                 {hasNextPage && (
-                  <View className="flex-1">
-                    <Button label="Next" onPress={handleNextPage} />
-                  </View>
+                  <Button onPress={handleNextPage} className="flex-1">
+                    <Text>Next</Text>
+                  </Button>
                 )}
               </View>
             </View>

@@ -1,7 +1,14 @@
 import React from 'react';
-import { Modal as RNModal } from 'react-native';
 
-import { Button, Input, Pressable, Text, View } from '@/components/ui';
+import { Button, Input, Text, View } from '@/components/ui';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 type Props = {
   visible: boolean;
@@ -34,41 +41,32 @@ export const CollectionNameModal = ({
   };
 
   return (
-    <RNModal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onCancel}
-    >
-      <Pressable
-        className="flex-1 items-center justify-center bg-black/50"
-        onPress={onCancel}
-      >
-        <Pressable
-          className="w-4/5 rounded-2xl bg-neutral-800 p-6"
-          onPress={(e) => e.stopPropagation()}
-        >
-          <Text className="mb-4 text-xl font-bold text-white">{title}</Text>
+    <Dialog open={visible} onOpenChange={(open) => !open && onCancel()}>
+      <DialogContent style={{ width: 320, maxWidth: '90%' }}>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
 
+        <View className="py-4">
           <Input
             value={name}
             onChangeText={setName}
             placeholder="Enter collection name"
             autoFocus
-            className="mb-4"
             onSubmitEditing={handleConfirm}
+            style={{ width: '100%' }}
           />
+        </View>
 
-          <View className="flex-row gap-3">
-            <View className="flex-1">
-              <Button label="Cancel" onPress={onCancel} variant="secondary" />
-            </View>
-            <View className="flex-1">
-              <Button label="Confirm" onPress={handleConfirm} />
-            </View>
-          </View>
-        </Pressable>
-      </Pressable>
-    </RNModal>
+        <DialogFooter className="flex-row gap-3">
+          <Button onPress={onCancel} variant="secondary" className="flex-1">
+            <Text>Cancel</Text>
+          </Button>
+          <Button onPress={handleConfirm} className="flex-1">
+            <Text>Confirm</Text>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

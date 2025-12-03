@@ -162,7 +162,9 @@ const News = observer(() => {
     if (data && data.length === limit) {
       return (
         <View className="p-4">
-          <Button label="Load More" onPress={handleLoadMore} />
+          <Button onPress={handleLoadMore}>
+            <Text>Load More</Text>
+          </Button>
         </View>
       );
     }
