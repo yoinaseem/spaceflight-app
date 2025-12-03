@@ -37,6 +37,10 @@ const News = observer(() => {
   const flashListRef = React.useRef<FlashList<Article>>(null);
   const limit = 20;
 
+  // Determine if we should skip the query entirely
+  const shouldSkipQuery =
+    filterMode === 'following' && subscriptions.followedSites.length === 0;
+
   // Dynamic news_site parameter for fetch when in filter mode
   const newsSiteParam = React.useMemo(() => {
     if (filterMode === 'following' && subscriptions.followedSites.length > 0) {
@@ -46,10 +50,24 @@ const News = observer(() => {
   }, [filterMode, subscriptions.followedSites]);
 
   const { data, isPending, isError, error, refetch } = useArticles({
-    variables: { limit, offset, news_site: newsSiteParam }
+    variables: { limit, offset, news_site: newsSiteParam },
+    enabled: !shouldSkipQuery
   });
   const insets = useSafeAreaInsets();
   const { lastScrollY, tabBarTranslateY, registerScrollHandler, unregisterScrollHandler } = useTabBar();
+
+  // Reset accumulated articles when filter changes
+  const prevFilterKey = React.useRef<string | undefined>(undefined);
+  const currentFilterKey = newsSiteParam ?? 'all';
+
+  React.useEffect(() => {
+    if (prevFilterKey.current !== undefined && prevFilterKey.current !== currentFilterKey) {
+      // Filter changed - reset pagination
+      setAllArticles([]);
+      setOffset(0);
+    }
+    prevFilterKey.current = currentFilterKey;
+  }, [currentFilterKey]);
 
   // Register scroll to top handler
   React.useEffect(() => {
@@ -115,8 +133,6 @@ const News = observer(() => {
 
   const handleFilterSelect = (mode: FilterMode) => {
     setFilterMode(mode);
-    setOffset(0);
-    setAllArticles([]);
   };
 
   const handleBookmarkPress = (article: Article) => {
@@ -124,15 +140,16 @@ const News = observer(() => {
     bottomSheetRef.current?.expand();
   };
 
+  // Accumulate paginated results
   React.useEffect(() => {
-    if (data) {
+    if (data && !shouldSkipQuery) {
       if (offset === 0) {
         setAllArticles(data);
       } else {
         setAllArticles((prev) => [...prev, ...data]);
       }
     }
-  }, [data, offset]);
+  }, [data, offset, shouldSkipQuery]);
 
   const handleLoadMore = () => {
     setOffset((prev) => prev + limit);
@@ -161,6 +178,10 @@ const News = observer(() => {
   }
 
   const renderFooter = () => {
+    if (shouldSkipQuery) {
+      return null;
+    }
+
     if (isPending && offset > 0) {
       return (
         <View className="py-4">
@@ -244,12 +265,12 @@ const News = observer(() => {
 
       <FlashList
         ref={flashListRef}
-        data={allArticles}
+        data={shouldSkipQuery ? [] : allArticles}
         renderItem={renderItem}
         keyExtractor={(_, index) => `item-${index}`}
         ListEmptyComponent={
           <EmptyList
-            isLoading={isPending}
+            isLoading={isPending && !shouldSkipQuery}
             title={filterMode === 'following' ? 'No articles from followed sources' : 'No results found'}
             description={filterMode === 'following' ? 'Follow news sources to see their articles here' : 'Try refreshing the page'}
           />
