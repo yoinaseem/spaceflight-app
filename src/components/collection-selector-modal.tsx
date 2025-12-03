@@ -8,7 +8,7 @@ import type { Article } from '@/api/articles';
 import { useStores } from '@/stores';
 import { CollectionNameModal } from '@/components/collection-name-modal';
 import { Pressable, Text, View } from '@/components/ui';
-import { showSuccessMessage } from '@/components/ui/utils';
+import { showSuccessMessage, showErrorMessage } from '@/components/ui/utils';
 
 type Props = {
   article: Article | null;
@@ -25,8 +25,13 @@ export const CollectionSelectorModal = observer(({ article, bottomSheetRef }: Pr
   };
 
   const handleConfirmCreate = (name: string) => {
-    collectionStore.createCollection(name);
-    setShowCreateModal(false);
+    try {
+      collectionStore.createCollection(name);
+      setShowCreateModal(false);
+    } catch (error) {
+      setShowCreateModal(false);
+      showErrorMessage(error instanceof Error ? error.message : 'Failed to create collection');
+    }
   };
 
   const handleSelectCollection = (collectionId: string) => {

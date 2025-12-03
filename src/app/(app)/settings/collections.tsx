@@ -9,6 +9,7 @@ import { useStores } from '@/stores';
 import type { Collection } from '@/stores/collection-store';
 import { CollectionNameModal } from '@/components/collection-name-modal';
 import { Button, FocusAwareStatusBar, Pressable, Text, View } from '@/components/ui';
+import { showErrorMessage } from '@/components/ui/utils';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,7 +35,6 @@ export default observer(function Collections() {
   const [editingCollection, setEditingCollection] = React.useState<Collection | null>(null);
   const [deleteConfirm, setDeleteConfirm] = React.useState<Collection | null>(null);
   const [showCannotDeleteAlert, setShowCannotDeleteAlert] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const handleCreateCollection = () => {
     setShowCreateModal(true);
@@ -45,7 +45,8 @@ export default observer(function Collections() {
       collectionStore.createCollection(name);
       setShowCreateModal(false);
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to create collection');
+      setShowCreateModal(false);
+      showErrorMessage(error instanceof Error ? error.message : 'Failed to create collection');
     }
   };
 
@@ -55,7 +56,8 @@ export default observer(function Collections() {
         collectionStore.renameCollection(editingCollection.id, name);
         setEditingCollection(null);
       } catch (error) {
-        setErrorMessage(error instanceof Error ? error.message : 'Failed to rename collection');
+        setEditingCollection(null);
+        showErrorMessage(error instanceof Error ? error.message : 'Failed to rename collection');
       }
     }
   };
@@ -106,6 +108,9 @@ export default observer(function Collections() {
       <FlatList
         data={collectionStore.collections}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + 90,
+        }}
         renderItem={({ item }) => {
           const mostRecentArticle = item.articles[0];
           return (
@@ -215,23 +220,6 @@ export default observer(function Collections() {
             </AlertDialogCancel>
             <AlertDialogAction onPress={confirmDelete}>
               <Text>Delete</Text>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Error Alert */}
-      <AlertDialog open={errorMessage !== null} onOpenChange={(open) => !open && setErrorMessage(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Error</AlertDialogTitle>
-            <AlertDialogDescription>
-              {errorMessage}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onPress={() => setErrorMessage(null)}>
-              <Text>OK</Text>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
