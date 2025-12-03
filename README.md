@@ -82,16 +82,45 @@ A modern React Native mobile application for browsing and organizing space-relat
 
 ## Screenshots
 
-> **Note:** Screenshots will be added here showing:
-> - News feed screen
-> - Article detail modal
-> - Search/Explore interface
-> - Collections list
-> - Collection selector modal
-> - Following tab
-> - Settings screen
+### News Feed
+Main screen displaying latest spaceflight news articles with infinite scroll and pull-to-refresh.
 
-[Screenshots to be added]
+![News Feed](screenshots/01-news-feed.png)
+
+### Article Detail
+Modal view showing full article information with bookmark and follow buttons.
+
+![Article Detail](screenshots/02-article-detail.png)
+
+### Following Filter on News
+News feed filtered to show only articles from followed news sources.
+
+![Following Filter](screenshots/03-following-tab.png)
+
+### Explore & Search
+Search interface with real-time results and debounced input.
+
+![Explore Search](screenshots/04-explore-search.png)
+
+### Following Tab
+Dedicated tab displaying all followed news sources with statistics.
+
+![Following Tab](screenshots/05-collection-selector.png)
+
+### Collections List
+Overview of saved collections with article counts and preview images.
+
+![Collections List](screenshots/06-collections-list.png)
+
+### Collection Detail
+View showing all articles within a specific collection.
+
+![Collection Detail](screenshots/07-collection-detail.png)
+
+### Settings
+App settings with collections management and external links.
+
+![Settings](screenshots/08-settings.png)
 
 ## Technologies Used
 
